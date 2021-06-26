@@ -14,6 +14,7 @@ function saveStudentData(student) {
   }
 
   students.push(student);
+  console.log(student);
   localStorage.setItem("students", JSON.stringify(students));
 }
 
@@ -65,6 +66,14 @@ function getStudents() {
     const result = document.createElement("td");
     result.innerText = student.result;
 
+    //Edit function
+    const edit = document.createElement("td");
+    edit.innerHTML = `<i id="edit" role="button" class="far fa-edit" data-numb="${student.email}"></i>`;
+
+    //Remove function
+    const remove = document.createElement("td");
+    remove.innerHTML = `<i id="delete" role="button" class="fas fa-trash" data-num="${student.email}"></i>`;
+
     Tr.appendChild(Hash);
     Tr.appendChild(name);
     Tr.appendChild(email);
@@ -76,6 +85,8 @@ function getStudents() {
     Tr.appendChild(obtainedMark);
     Tr.appendChild(percentage);
     Tr.appendChild(result);
+    Tr.appendChild(edit);
+    Tr.appendChild(remove);
 
     studentTable.appendChild(Tr);
   });
@@ -147,18 +158,22 @@ StudentForm.addEventListener("submit", (e) => {
   getStudents();
 });
 
-// getStudents();
-
-// let formElement = document.forms.Submit;
-// let formData = new FormData(formElement);
-// let name = formData.get("name");
-// console.log(name);
-
-// let students = [];
-// students.push({
-//   name: "Ranjit",
-//   email: "ranjitkoiri009@gmail.com",
-//   class: "12th",
-// });
-// console.log(students);
-// localStorage.setItem("students", JSON.stringify(students));
+// Delete Function
+const Remove = document.querySelectorAll("#delete");
+// console.log(Delete);
+Remove.forEach((del) => {
+  del.addEventListener("click", (e) => {
+    // console.log(del.dataset.num);
+    let students;
+    if (localStorage.getItem("students") === null) {
+      students = [];
+    } else {
+      students = JSON.parse(localStorage.getItem("students"));
+    }
+    // console.log(students);
+    const index = del.dataset.num;
+    students.splice(students.indexOf(index), 1);
+    localStorage.setItem("students", JSON.stringify(students));
+    getStudents();
+  });
+});
